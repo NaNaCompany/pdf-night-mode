@@ -1,0 +1,13 @@
+{
+  "pdfjs": {
+    "version": "5.6.205",
+    "license": "Apache-2.0",
+    "source": "https://github.com/mozilla/pdf.js"
+  },
+  "pdf_lib": {
+    "version": "1.17.1",
+    "license": "MIT",
+    "source": "https://github.com/Hopding/pdf-lib"
+  },
+  "modifications": "Vendor files unmodified; original color mapping and UI code."
+}

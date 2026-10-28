@@ -1,0 +1,18 @@
+{
+  "slug": "pdf-night-mode",
+  "origin": "https://nanalab.kr/pdf-night-mode",
+  "audience": "public",
+  "languages": [
+    "ko",
+    "en",
+    "ja",
+    "zh",
+    "es",
+    "de",
+    "fr",
+    "pt",
+    "ru"
+  ],
+  "name": "PDF 색상 반전",
+  "repository": "https://github.com/NaNaCompany/pdf-night-mode"
+}
