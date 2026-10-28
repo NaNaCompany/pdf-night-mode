@@ -68,7 +68,7 @@ $('convert').addEventListener('click',async()=>{
   busy=true;abort=false;++previewToken;controls();$('cancel').disabled=false;$('progress').max=pages.length;$('progress').value=0;status(t('starting'));
   try{
     const data=await convertPdf(doc,PDFDocument,{pages,bg:$('bg').value,fg:$('fg').value,dpi:Number($('dpi').value),createCanvas:makeCanvas,shouldCancel:()=>abort,onProgress:(n,total)=>{$('progress').value=n;status(t('progress',{n,total}));}});
-    const blob=new Blob([data],{type:'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='dark-color.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
+    const blob=new Blob([data],{type:'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='dark-color.pdf';a.setAttribute('data-google-vignette','false');a.setAttribute('data-google-interstitial','false');document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
     status(t('complete',{pages:pages.length}));
   }catch(error){status(messages[error.message]||t('conversionError'),error.message!=='cancelled');}
   finally{busy=false;controls();showPreview();}

@@ -17,3 +17,7 @@
 - Public repository: https://github.com/NaNaCompany/pdf-night-mode . Public app: https://nanalab.kr/pdf-night-mode/ .
 - Changed hosting target to GitHub Pages `main:/docs`, retained licenses and attribution, added `.nojekyll`, public canonical/robots/sitemap URLs and removed private-preview noindex directives. The private Sites prototype is preserved separately.
 - Added verified GA4 `G-2ZYSF0173P`, GTM `GTM-NV2WWQXB`, AdSense `ca-pub-9767176956440077` and Cloudflare Web Analytics `9f3423bb0d034d91bbe1a12afeff2429` to every HTML page. Local/test hosts do not initialize analytics or advertising scripts. No input contents are sent in custom analytics events.
+
+- Public output validation passed: 18 HTML pages; all four integrations, canonical URLs and indexable metadata checked.
+
+- Public browser QA exposed AdSense vignette interception of generated downloads. Download anchors now use `data-google-vignette="false"` and `data-google-interstitial="false"`, and are attached to the document for the click. Publisher tags remain enabled. Official AdSense documentation: https://support.google.com/adsense/answer/17016693?hl=en .
