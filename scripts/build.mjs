@@ -1,3 +1,12 @@
+
+// Shared book banner adapter: campaign and appearance are maintained in src_cdn.
+function addSharedBookBanner(value) {
+  if (typeof value !== 'string' || !/^\s*(?:<!doctype\s+html|<html\b)/i.test(value) || value.includes('https://nanalab.kr/src_cdn/banner/astra.js')) return value;
+  const snippet = "<!-- NaNa shared book banner --><script defer src=\"https://nanalab.kr/src_cdn/banner/astra.js\"></script><!-- /NaNa shared book banner -->";
+  if (/<head\b[^>]*>/i.test(value)) return value.replace(/<head\b[^>]*>/i, opening => opening + snippet);
+  for (const closing of [/<\/body\s*>/i, /<\/html\s*>/i]) if (closing.test(value)) return value.replace(closing, () => snippet + value.match(closing)[0]);
+  return value + snippet;
+}
 import {finalizePublicSite} from './publisher-tracking.mjs';
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
@@ -26,13 +35,13 @@ for(const lang of app.languages){
  const languageOptions=app.languages.map(l=>`<option value="${base}${l==='ko'?'':l+'/'}"${l===lang?' selected':''}>${labels[l]}</option>`).join('');
  const values={...t,lang,base,version,metadata,languageOptions,translations:JSON.stringify(t).replaceAll('<',String.fromCharCode(92)+'u003c')};
  const raw=new Set(['metadata','languageOptions','translations']);
- const html=template.replace(/\{\{(\w+)\}\}/g,(_,key)=>{if(!(key in values))throw new Error('Missing '+key);return raw.has(key)?values[key]:esc(values[key]);});
- await fs.writeFile(path.join(directory,'index.html'),html);
+ const html=template.replace(/\{\{(\w+)\}\}/g,(_,key)=>{if(!(key in values))throw new Error('Missing '+key);return addSharedBookBanner((raw.has(key)?values[key]:esc(values[key])));});
+ await fs.writeFile(path.join(directory,'index.html'),addSharedBookBanner((html)));
  const licensing=`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>${esc(t.licenseTitle)}</title><link rel="stylesheet" href="${base}style.css"></head><body><main class="licenses"><a href="./">← ${esc(t.back)}</a><h1>${esc(t.licenseTitle)}</h1><p>${esc(t.licenseDescription)}</p><h2>PDF.js · Apache 2.0</h2><a href="https://github.com/mozilla/pdf.js">PDF.js</a><pre>${legal[0]}</pre><h2>PDF-LIB · MIT</h2><a href="https://github.com/Hopding/pdf-lib">PDF-LIB</a><pre>${legal[1]}</pre></main></body></html>`;
- await fs.writeFile(path.join(directory,'licenses.html'),licensing);urls.push(url);
+ await fs.writeFile(path.join(directory,'licenses.html'),addSharedBookBanner((licensing)));urls.push(url);
 }
-await fs.writeFile(path.join(dist,'robots.txt'),'User-agent: *\nAllow: /\nSitemap: '+app.origin+'/sitemap.xml\n');
-await fs.writeFile(path.join(dist,'sitemap.xml'),'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls.map(url=>'<url><loc>'+url+'</loc></url>').join('')+'</urlset>\n');
+await fs.writeFile(path.join(dist,'robots.txt'),addSharedBookBanner(('User-agent: *\nAllow: /\nSitemap: '+app.origin+'/sitemap.xml\n')));
+await fs.writeFile(path.join(dist,'sitemap.xml'),addSharedBookBanner(('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls.map(url=>'<url><loc>'+url+'</loc></url>').join('')+'</urlset>\n')));
 console.log(JSON.stringify({status:'built',app:app.slug,languages:app.languages,pages:urls.length}));
 
 console.log(JSON.stringify({publisher_pages:await finalizePublicSite(dist,app)}));
